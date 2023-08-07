@@ -32,12 +32,23 @@ function renderCard(data) {
   document.getElementById("toy-collection").append(cardBase);
 }
 
-renderCard({
+async function addCards() {
+  //fetch request
+  const response = await fetch("http://localhost:3000/toys");
+  const toyInfo = await response.json();
+  console.log(toyInfo);
+  //call renderCard forEach object item
+  toyInfo.forEach(renderCard);
+}
+addCards();
+
+/*renderCard({
   id: 4,
   name: "Slinky Dog",
   image: "https://www.freeiconspng.com/uploads/slinky-png-transparent-1.png",
   likes: 4,
 });
+*/
 
 //no cards yet, so we want to put cards in div id "toy-collection" (append?)
 //put card maker into a render function to do it repeatedly
