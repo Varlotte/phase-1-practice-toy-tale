@@ -32,10 +32,11 @@ function renderCard(data) {
   cardBase.append(toyName, likesPar, img, button);
   document.getElementById("toy-collection").append(cardBase);
   button.addEventListener("click", async (e) => {
-    //every time it's clicked add another to the text
+    //every time it's clicked add another to the text in the server
     //patch request
     e.preventDefault();
-    const newNumberOfLikes = data.likes + 1;
+    console.log(data.likes);
+    const newNumberOfLikes = parseInt(likesPar.textContent) + 1;
     const response = await fetch(`http://localhost:3000/toys/${data.id}`, {
       method: "PATCH",
       headers: {
@@ -47,7 +48,7 @@ function renderCard(data) {
       }),
     });
     const likeInfo = await response.json();
-
+    likesPar.textContent = `${likeInfo.likes} likes!`;
     //update the DOM
     //update likesPar with `{data.likes} likes!`
   });
