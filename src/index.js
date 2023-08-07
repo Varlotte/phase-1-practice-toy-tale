@@ -1,4 +1,5 @@
 let addToy = false;
+let formClass = document.querySelector(".add-toy-form");
 
 document.addEventListener("DOMContentLoaded", () => {
   const addBtn = document.querySelector("#new-toy-btn");
@@ -30,6 +31,26 @@ function renderCard(data) {
   button.textContent = "Like ❤️";
   cardBase.append(toyName, likesPar, img, button);
   document.getElementById("toy-collection").append(cardBase);
+  button.addEventListener("click", async (e) => {
+    //every time it's clicked add another to the text
+    //patch request
+    e.preventDefault();
+    const newNumberOfLikes = data.likes + 1;
+    const response = await fetch(`http://localhost:3000/toys/${data.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        likes: newNumberOfLikes,
+      }),
+    });
+    const likeInfo = await response.json();
+
+    //update the DOM
+    //update likesPar with `{data.likes} likes!`
+  });
 }
 
 async function addCards() {
@@ -41,6 +62,28 @@ async function addCards() {
   toyInfo.forEach(renderCard);
 }
 addCards();
+
+formClass.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  const formData = {
+    name: formClass.name.value,
+    image: formClass.image.value,
+    likes: 0,
+  };
+  //console.log(formData);
+  const response = await fetch("http://localhost:3000/toys", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(formData),
+  });
+  const toyJson = await response.json();
+  //console.log("json", toyJson);
+  renderCard(toyJson);
+  //add the card
+});
 
 /*renderCard({
   id: 4,
